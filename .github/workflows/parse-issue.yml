@@ -1,0 +1,23 @@
+name: Parse issue
+on:
+  issues:
+    types:
+      - opened
+
+jobs:
+  parseIssue:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: stefanbuck/github-issue-parser@main
+        id: issue-parser
+        with:
+          template-path: .github/ISSUE_TEMPLATE/bug-report.yml
+
+      - name: "log parsed issue data"
+        run: |
+          cat <<EOT
+          $ISSUE_DATA_JSON
+          EOT
+        env:
+          ISSUE_DATA_JSON: ${{ steps.issue-parser.outputs.jsonString }}
